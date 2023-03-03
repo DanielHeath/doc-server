@@ -1,0 +1,26 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require 'rdoc/rdoc'
+
+outpath = ENV.fetch('DOCSERVER_OUTPUT_PATH', 'rdoc')
+port = ENV.fetch("DOCSERVER_PORT", "8088").to_i
+port = 8088 if port <= 0
+
+if ! Dir.exist?(outpath)
+  Dir.mkdir(outpath)
+  File.write("#{outpath}/created.rid", '')
+  options = RDoc::Options.new
+  options.setup_generator "darkfish"
+  options.op_dir = outpath
+
+  options.files = $LOAD_PATH.map {|p| Dir.glob("#{p}/**/*.rb")}.flatten
+  rdoc = RDoc::RDoc.new
+  rdoc.document options
+end
+
+require 'webrick'
+
+s = WEBrick::HTTPServer.new(:Port => port, :DocumentRoot => outpath)
+trap('INT') { s.shutdown }
+s.start
