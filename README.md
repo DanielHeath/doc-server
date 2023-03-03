@@ -19,6 +19,7 @@ Whenever you install or update gems, delete this directory, and restart doc-serv
 ## Configuration
 
 DOCSERVER_OUTPUT_PATH: Where to store the per-bundle documentation. Default is "rdoc".
+
 DOCSERVER_PORT: Which port to listen on. Default is 8088.
 
 ## Contributing
